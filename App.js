@@ -9,9 +9,6 @@ import LoginScreen from './Login';
 import Welcome from './Welcome';
 
 
-
-
-
 const Stack = createNativeStackNavigator();
 
 function App() {

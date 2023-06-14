@@ -9,6 +9,8 @@ import Welcome from './Welcome';
 import { Pressable } from 'react-native';
 
 
+import Axios from 'axios';
+
 
 
 function LoginScreen({ navigation }) {
@@ -38,6 +40,14 @@ function LoginScreen({ navigation }) {
         firebase.auth().signInWithCredential(credential)
         .then(() => {
             setCode('');
+
+          /*  
+            Axios.post('www.cloudority.com/login', {
+              phone_number: number,
+            }).then((response) => {
+
+            })
+              */
             navigation.navigate(Welcome)
         })
         .catch((error) => {
@@ -47,6 +57,7 @@ function LoginScreen({ navigation }) {
         })
         
     }
+
     const styles = StyleSheet.create({
         container: {
             flex: 1,
