@@ -1,4 +1,4 @@
-import {React, useState, useRef} from 'react';
+import React, {useState, useRef,} from 'react';
 import { View, Text, TextInput, Keyboard, StyleSheet} from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha'
@@ -7,12 +7,11 @@ import firebase from 'firebase/compat/app'
 import Welcome from './Welcome';
 import { Pressable } from 'react-native';
 
+import { isLoggedIn } from './states/global';
 
 import Axios from 'axios';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
 
 
 
@@ -23,6 +22,9 @@ function LoginScreen({ navigation }) {
     routes: [{name: 'LoginScreen'}]
   })
   */
+
+
+
     const [ number, setNumber ] = useState("");
     const [code, setCode] = useState('');
     const [verificationId, setVerificationId] = useState(null);
@@ -30,8 +32,8 @@ function LoginScreen({ navigation }) {
     const [ showInvalid, setShowInvalid ] = useState(false);
     const phoneInput = useRef();
     const [ showSuccess, setShowSuccess ] = useState(false);
- 
 
+    const [auth, setAuth] = isLoggedIn();
 
     const storeData = async (value) => {
       try {
@@ -69,10 +71,12 @@ function LoginScreen({ navigation }) {
               */
 
             storeData(number);
+            setAuth(true);
             //navigation.navigate(Welcome);
             
-            setNumber('');
             setCode('');
+            setNumber('');
+            
         })
         .catch((error) => {
             //show an alert

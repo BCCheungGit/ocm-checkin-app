@@ -10,14 +10,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import LoginScreen from './Login';
 import Welcome from './Welcome';
 
+import { isLoggedIn } from './states/global';
 
 const Stack = createNativeStackNavigator();
 
 
 
 function App() {
-  
-  const [signedIn, setSignedIn] = useState(null)
+  const [signedIn, setSignedIn] = useState(false)
+
+  const [auth, setAuth] = isLoggedIn();
+
+  /*
 
   const getData = async () => {
     try {
@@ -29,33 +33,16 @@ function App() {
       console.log(error)
     }
   }
-
-  React.useEffect(()=> {
-    getData();
-  }, [])  
- 
-
+*/
   return (
     <NavigationContainer>
     <Stack.Navigator>
-      {signedIn !== null ? (
-        <>
-      <Stack.Screen name="Welcome" component={Welcome} />
-      </>
-    ) : (
-      <>
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      </>
-    )
-}
-       {/* 
-      <Stack.Navigator initialRouteName = {route}>
-        <Stack.Screen name="LoginScreen" component={LoginScreen} options={{title: "Login"}}/>
-        <Stack.Screen name="Welcome" component={Welcome} />
-      </Stack.Navigator>
-      */}
+    {auth ? (<Stack.Screen name="Welcome" component={Welcome} options={{headerShown: false}}/>)
+     : (<Stack.Screen name="LoginScreen" component={LoginScreen} options={{headerShown: false}}/>)}  
+      
       </Stack.Navigator>
     </NavigationContainer>
+
     
   );
 }

@@ -4,17 +4,19 @@ import { View, Text, Pressable} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import LoginScreen from './Login';
 
+import { isLoggedIn } from './states/global';
 
-
-function Welcome( {route, navigation} ) {
+function Welcome( {navigation} ) {
   /*
     navigation.reset({
       index: 0,
       routes: [{name: 'Welcome'}]
     })
 */
-    const [currentNumber, setCurrentNumber] = useState("");
 
+
+    const [auth, setAuth] = isLoggedIn();
+    const [currentNumber, setCurrentNumber] = useState("");
 
     const getData = async () => {
       try {
@@ -39,16 +41,19 @@ function Welcome( {route, navigation} ) {
       
     }
 
-
-
-
     getData();
+
+    const logOut = () => {
+      removeData();
+      setAuth(false);
+      //navigation.navigate(LoginScreen)
+    }
 
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <Text>You are currently logged in as {currentNumber}</Text>
         <Text>Insert QR Code Here</Text>
-        <Pressable onPress={removeData}>
+        <Pressable onPress={logOut}>
           <Text>Log Out</Text>
         </Pressable>
       </View>
