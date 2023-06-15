@@ -1,6 +1,5 @@
 import {React, useState, useRef} from 'react';
-import { View, Text, Button, TextInput, Keyboard, StyleSheet} from 'react-native';
-import PhoneInput from 'react-native-phone-number-input';
+import { View, Text, TextInput, Keyboard, StyleSheet} from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha'
 import { firebaseConfig } from './config'
@@ -11,25 +10,46 @@ import { Pressable } from 'react-native';
 
 import Axios from 'axios';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
 
 
 function LoginScreen({ navigation }) {
+  /*
+  navigation.reset({
+    index: 0,
+    routes: [{name: 'LoginScreen'}]
+  })
+  */
     const [ number, setNumber ] = useState("");
     const [code, setCode] = useState('');
     const [verificationId, setVerificationId] = useState(null);
     const recaptchaVerifier = useRef(null);
-    const [ valid, setValid ] = useState(false);
     const [ showInvalid, setShowInvalid ] = useState(false);
     const phoneInput = useRef();
     const [ showSuccess, setShowSuccess ] = useState(false);
-    const [ selected, setSelected ] = useState(false);
+ 
+
+
+    const storeData = async (value) => {
+      try {
+        await AsyncStorage.setItem('phone_number_key', value)
+        console.log(`${value} stored successfully!`)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+
 
     const sendVerification = () => {
         const phoneProvider = new firebase.auth.PhoneAuthProvider();
         phoneProvider
             .verifyPhoneNumber(number, recaptchaVerifier.current)
             .then(setVerificationId);
-            setNumber('');
+            
     };
 
     const confirmCode = () => {
@@ -39,7 +59,6 @@ function LoginScreen({ navigation }) {
         );
         firebase.auth().signInWithCredential(credential)
         .then(() => {
-            setCode('');
 
           /*  
             Axios.post('www.cloudority.com/login', {
@@ -48,7 +67,12 @@ function LoginScreen({ navigation }) {
 
             })
               */
-            navigation.navigate(Welcome)
+
+            storeData(number);
+            //navigation.navigate(Welcome);
+            
+            setNumber('');
+            setCode('');
         })
         .catch((error) => {
             //show an alert
@@ -119,7 +143,7 @@ function LoginScreen({ navigation }) {
             placeholder='Enter Phone Number'
             onChangeText={(text) => {
                 setNumber("+1" + text);
-                setValid(true);
+
                 setShowInvalid(false);
                 setShowSuccess(false);
             }}
