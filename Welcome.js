@@ -49,12 +49,48 @@ function Welcome( {navigation} ) {
       //navigation.navigate(LoginScreen)
     }
 
+
+    const styles = StyleSheet.create({
+      container: {
+          flex: 1,
+          padding: 20,
+          flex: 1, 
+          alignItems: 'center', 
+          justifyContent: 'center' 
+      },
+      label: {
+          fontSize: 16,
+          lineHeight: 21,
+          fontWeight: 'bold',
+          letterSpacing: 0.25,
+          color: 'white',
+        },
+      text: {
+          padding: 10,
+          fontSize: 15,
+      },
+      title: {
+          fontWeight: 'bold',
+          fontSize: 25,
+
+      },
+      button: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        borderRadius: 4,
+        elevation: 3,
+        backgroundColor: 'purple',
+      },
+  })
+
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>You are currently logged in as {currentNumber}</Text>
+      <View style={[styles.container]}>
+        <Text style={[styles.title]}>You are currently logged in as {currentNumber}</Text>
         <Text>Insert QR Code Here</Text>
-        <Pressable onPress={logOut}>
-          <Text>Log Out</Text>
+        <Pressable onPress={logOut} style={styles.button}>
+          <Text style={[styles.label]}>Log Out</Text>
         </Pressable>
       </View>
     )
