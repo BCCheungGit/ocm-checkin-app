@@ -15,16 +15,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-function LoginScreen({ navigation }) {
-  /*
-  navigation.reset({
-    index: 0,
-    routes: [{name: 'LoginScreen'}]
-  })
-  */
+//LoginScreen: the main function for the login screen (pretty self-explanatory)
 
+function LoginScreen() {
 
-
+    //create state variables
     const [ number, setNumber ] = useState("");
     const [code, setCode] = useState('');
     const [verificationId, setVerificationId] = useState(null);
@@ -32,12 +27,18 @@ function LoginScreen({ navigation }) {
     const [ showInvalid, setShowInvalid ] = useState(false);
     const phoneInput = useRef();
     const [ showSuccess, setShowSuccess ] = useState(false);
-
     const [auth, setAuth] = useLoggedIn();
-
-
     const [sentCode, setSentCode] = useState(false);
 
+
+
+    //storeData asynchrinous function to create a key for the phone number entered.
+    //Saves this key value pair to local storage for future reference.
+    /* 
+      NOTE: SecureStorage is an alternative, but I don't think it is necessary to encrypt the phone number
+      since it will usually be the same as the phone being used. This is a phone auth app, so there is no password
+      involved. Therefore, I will most likely continue to use AsyncStorage since I've used it before.
+    */
     const storeData = async (value) => {
       try {
         await AsyncStorage.setItem('phone_number_key', value)
@@ -48,7 +49,7 @@ function LoginScreen({ navigation }) {
     }
 
 
-
+    //sendVerification: uses firebase to send a verification code to the phone number provided.
     const sendVerification = () => {
         const phoneProvider = new firebase.auth.PhoneAuthProvider();
         phoneProvider
@@ -57,6 +58,9 @@ function LoginScreen({ navigation }) {
             
     };
 
+
+    //confirmCode: this function handles submit of code. Signs in the user using firebase and the entered number, 
+    //then sets auth to true and resets data. This will result in redirect to the Welcome.js route.
     const confirmCode = () => {
         const credential = firebase.auth.PhoneAuthProvider.credential(
             verificationId,
@@ -75,20 +79,21 @@ function LoginScreen({ navigation }) {
             setSentCode(false);
             storeData(number);
             setAuth(true);
-            //navigation.navigate(Welcome);
+
             
             setCode('');
             setNumber('');
             
         })
         .catch((error) => {
-            //show an alert
+
             console.log(error);
 
         })
         
     }
 
+    //style sheet creation
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -138,6 +143,8 @@ function LoginScreen({ navigation }) {
     })
 
 
+    //The main return of the LoginScreen function. Returns a basic login page that allows users to enter their information
+    //and sign in.
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} acessible={false}>
         <KeyboardAwareScrollView style={{backgroundColor: "white"}}
@@ -227,5 +234,6 @@ function LoginScreen({ navigation }) {
 
 
 }
-  
-  export default LoginScreen;
+
+//export function
+export default LoginScreen;

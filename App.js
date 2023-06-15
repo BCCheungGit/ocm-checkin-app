@@ -1,20 +1,17 @@
-import React, { useState, useRef} from 'react';
-import { View, Text, Button, TextInput, Keyboard} from 'react-native';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import PhoneInput from 'react-native-phone-number-input';
-import { TouchableWithoutFeedback } from 'react-native';
-
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
+
+import {useLoggedIn } from './states/global';
+
 
 import LoginScreen from './routes/Login';
 import Welcome from './routes/Welcome';
 
-import {useLoggedIn } from './states/global';
-
+//initialize react native stack navigator.
 const Stack = createNativeStackNavigator();
-
-
 
 function App() {
   const [auth, setAuth] = useLoggedIn();
@@ -32,6 +29,7 @@ function App() {
   }
   getData();
 
+  //When the user is unauthenticated, only the login screen route EXISTS. They cannot force route to Welcome. (secure)
   return (
     <NavigationContainer>
     <Stack.Navigator>

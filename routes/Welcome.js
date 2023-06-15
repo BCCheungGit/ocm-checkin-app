@@ -1,10 +1,11 @@
-import React, { useState, useRef} from 'react';
+import React, { useState} from 'react';
 import { View, Text, Pressable, StyleSheet} from 'react-native';
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import LoginScreen from './Login';
+
 
 import {useLoggedIn } from '../states/global';
+
 
 function Welcome( {navigation} ) {
   /*
@@ -14,10 +15,16 @@ function Welcome( {navigation} ) {
     })
 */
 
-
+    //initialize state variables. useLoggedIn() is the global state variable used for authentication checking.
     const [auth, setAuth] = useLoggedIn();
     const [currentNumber, setCurrentNumber] = useState("");
 
+
+    //getData Asynchrinous function: checks local AsyncStorage to see if a number with the key exists.
+    //if it does, set current user to the phone number.
+    /*
+      TODO: When database connection is established, instead display name of the person logged in instead of their phone #
+     */
     const getData = async () => {
       try {
         const value = await AsyncStorage.getItem('phone_number_key');
@@ -29,6 +36,8 @@ function Welcome( {navigation} ) {
       }
     }
 
+    //removeData Asynchrinous function: remove the data from local storage if the user chooses to 
+    //log out.
     const removeData = async () => {
       try {
         await AsyncStorage.removeItem('phone_number_key');
@@ -43,13 +52,13 @@ function Welcome( {navigation} ) {
 
     getData();
 
+    //remove data and unauthenticate on log out.
     const logOut = () => {
       removeData();
       setAuth(false);
-      //navigation.navigate(LoginScreen)
     }
 
-
+    //initialize stylesheet
     const styles = StyleSheet.create({
       container: {
           flex: 1,
@@ -87,6 +96,10 @@ function Welcome( {navigation} ) {
       },
   })
 
+    //return welcome screen
+    /*
+      TODO: Add QR codes from database.
+    */
     return (
       <View style={[styles.container]}>
         <Text style={[styles.title]}>You are currently logged in as:</Text>
@@ -99,4 +112,6 @@ function Welcome( {navigation} ) {
     )
   }
 
+
+//export function.
 export default Welcome;
