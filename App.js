@@ -13,45 +13,16 @@ import Welcome from './Welcome';
 
 const Stack = createNativeStackNavigator();
 
-let dataExists = false;
-
-const getData = async () => {
-  try {
-    const value = await AsyncStorage.getItem('phone_number_key');
-    if (value == null) {
-      dataExists = false;
-    } else {
-      dataExists = true;
-    }
-  } catch(error) {
-    console.log(error);
-  }
-}
-
-
-getData();
-
-const getSignedIn = () => {
-
-  if (dataExists == true) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 
 
 function App() {
-  /*
-  const [signedIn, setSignedIn] = useState(false)
+  
+  const [signedIn, setSignedIn] = useState(null)
 
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('phone_number_key');
-      if (value != null) {
-        setSignedIn(true)
-      }
+      setSignedIn(value)
       console.log(value)
       console.log(signedIn)
     } catch(error) {
@@ -59,19 +30,22 @@ function App() {
     }
   }
 
-  getData();
-*/
-  const isSignedIn = getSignedIn();
-
-
+  React.useEffect(()=> {
+    getData();
+  }, [])  
+ 
 
   return (
     <NavigationContainer>
     <Stack.Navigator>
-      {isSignedIn ? (
+      {signedIn !== null ? (
+        <>
       <Stack.Screen name="Welcome" component={Welcome} />
+      </>
     ) : (
+      <>
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      </>
     )
 }
        {/* 
