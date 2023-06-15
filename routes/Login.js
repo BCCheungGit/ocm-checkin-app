@@ -1,13 +1,13 @@
 import React, {useState, useRef,} from 'react';
-import { View, Text, TextInput, Keyboard, StyleSheet} from 'react-native';
+import { View, Text, TextInput, Keyboard, StyleSheet, Image} from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha'
-import { firebaseConfig } from './config'
+import { firebaseConfig } from '../config/config'
 import firebase from 'firebase/compat/app'
-import Welcome from './Welcome';
 import { Pressable } from 'react-native';
 
-import { isLoggedIn } from './states/global';
+import { KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useLoggedIn } from '../states/global';
 
 import Axios from 'axios';
 
@@ -33,7 +33,10 @@ function LoginScreen({ navigation }) {
     const phoneInput = useRef();
     const [ showSuccess, setShowSuccess ] = useState(false);
 
-    const [auth, setAuth] = isLoggedIn();
+    const [auth, setAuth] = useLoggedIn();
+
+
+    const [sentCode, setSentCode] = useState(false);
 
     const storeData = async (value) => {
       try {
@@ -69,7 +72,7 @@ function LoginScreen({ navigation }) {
 
             })
               */
-
+            setSentCode(false);
             storeData(number);
             setAuth(true);
             //navigation.navigate(Welcome);
@@ -90,7 +93,6 @@ function LoginScreen({ navigation }) {
         container: {
             flex: 1,
             padding: 20,
-            flex: 1, 
             alignItems: 'center', 
             justifyContent: 'center' 
         },
@@ -125,20 +127,33 @@ function LoginScreen({ navigation }) {
             fontWeight: 'bold',
             fontSize: 25,
 
-        }
+        },
+        image: {
+          resizeMode: 'contain',
+          height: 150,
+          width: 160,
+          marginBottom: 30,
+
+        },
     })
 
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} acessible={false}>
-        <View style={[
-            styles.container
-        ]}>
+        <KeyboardAwareScrollView style={{backgroundColor: "white"}}
+          resetScrollToCoords={{x: 0, y: 0}}
+          contentContainerStyle={styles.container}
+          scrollEnabled={true}
+        >
           <FirebaseRecaptchaVerifierModal 
             ref={recaptchaVerifier}
             firebaseConfig={firebaseConfig}
           />
-          <Text style={[styles.title]}>
+          <Image source={require('../images/ocmlogo.png')} style={styles.image} />
+
+          {sentCode == false ? (
+            <View style={[{justifyContent: 'center'}, {alignItems:'center'}]}>
+            <Text style={[styles.title]}>
             OCM QR Code Viewer
             </Text>
             <TextInput 
@@ -154,28 +169,13 @@ function LoginScreen({ navigation }) {
             keyboardType='number-pad'
             style={[styles.textinput]}
           />
-          <Pressable style={[({ pressed }) => [
-      {
-        backgroundColor: pressed
-          ? 'purple'
-          : 'rgb(64, 10, 100)'
-      },
-      styles.otherStyles
-    ], styles.button, {marginBottom: 100}]} onPress={
+          <Pressable style={[styles.button, {marginBottom: 100}]} onPress={
             () => {
-
                 console.log("Phone Number:" + number);
                 sendVerification();
+                setSentCode(true);
                 setShowSuccess(true);
-            /* if (valid === true) {
-                
-                
-              } else {
-                navigation.navigate(LoginScreen)
-                setShowInvalid(true);
-              }
-              */
-          }}>
+            }}>
             <Text style={styles.label}>Send Code</Text>
           </Pressable>
         
@@ -189,7 +189,18 @@ function LoginScreen({ navigation }) {
               <Text style={[styles.text]} >Phone number is not valid!</Text>
             </View>
           )}
-          <TextInput 
+
+          </View>
+
+
+          ) : (
+            
+          
+          <View style={[{justifyContent: 'center'}, {alignItems:'center'}]}>
+            <Text style={[styles.title]}>
+            Enter Verification Code
+            </Text>
+            <TextInput 
             placeholder='Enter Verification Code'
             onChangeText={setCode}
             keyboardType='number-pad'
@@ -201,7 +212,13 @@ function LoginScreen({ navigation }) {
         ]} onPress={confirmCode}>
             <Text style={styles.label}>Confirm</Text>
           </Pressable>
-        </View>
+          </View>
+          )}
+
+          
+
+
+        </KeyboardAwareScrollView>
       </TouchableWithoutFeedback>
     );
 

@@ -1,10 +1,10 @@
 import React, { useState, useRef} from 'react';
-import { View, Text, Pressable} from 'react-native';
+import { View, Text, Pressable, StyleSheet} from 'react-native';
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import LoginScreen from './Login';
 
-import { isLoggedIn } from './states/global';
+import {useLoggedIn } from '../states/global';
 
 function Welcome( {navigation} ) {
   /*
@@ -15,7 +15,7 @@ function Welcome( {navigation} ) {
 */
 
 
-    const [auth, setAuth] = isLoggedIn();
+    const [auth, setAuth] = useLoggedIn();
     const [currentNumber, setCurrentNumber] = useState("");
 
     const getData = async () => {
@@ -71,7 +71,8 @@ function Welcome( {navigation} ) {
       },
       title: {
           fontWeight: 'bold',
-          fontSize: 25,
+          fontSize: 18,
+          padding: 10,
 
       },
       button: {
@@ -82,13 +83,15 @@ function Welcome( {navigation} ) {
         borderRadius: 4,
         elevation: 3,
         backgroundColor: 'purple',
+        padding: 10,
       },
   })
 
     return (
       <View style={[styles.container]}>
-        <Text style={[styles.title]}>You are currently logged in as {currentNumber}</Text>
-        <Text>Insert QR Code Here</Text>
+        <Text style={[styles.title]}>You are currently logged in as:</Text>
+        <Text style={[styles.title]}> {currentNumber}</Text>
+        <Text style={[styles.title]}>Insert QR Code Here</Text>
         <Pressable onPress={logOut} style={styles.button}>
           <Text style={[styles.label]}>Log Out</Text>
         </Pressable>
