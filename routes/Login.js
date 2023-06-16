@@ -29,7 +29,7 @@ function LoginScreen() {
     const [ showSuccess, setShowSuccess ] = useState(false);
     const [auth, setAuth] = useLoggedIn();
     const [sentCode, setSentCode] = useState(false);
-
+    const codeInput = useRef();
 
 
     //storeData asynchrinous function to create a key for the phone number entered.
@@ -169,7 +169,6 @@ function LoginScreen() {
             placeholder='Enter Phone Number'
             onChangeText={(text) => {
                 setNumber("+1" + text);
-
                 setShowInvalid(false);
                 setShowSuccess(false);
             }}
@@ -182,6 +181,7 @@ function LoginScreen() {
                 sendVerification();
                 setSentCode(true);
                 setShowSuccess(true);
+                phoneInput.text = '';
             }}>
             <Text style={styles.label}>Send Code</Text>
           </Pressable>
@@ -208,6 +208,8 @@ function LoginScreen() {
             Enter Verification Code
             </Text>
             <TextInput 
+            ref={codeInput}
+            value={code}
             placeholder='Enter Verification Code'
             onChangeText={setCode}
             keyboardType='number-pad'
