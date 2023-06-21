@@ -208,9 +208,14 @@ function LoginScreen() {
           {sentCode == false ? (
           <View>
             <View style={[{justifyContent: 'center'}, {alignItems:'center'}]}>
-            <Text style={[styles.title]}>
-            OCM QR Code Viewer
-            </Text>
+              {isChinese ? (
+                <Text style={styles.title}>中宣会二维码查看器</Text>
+              ) : (
+                <Text style={[styles.title]}>
+                OCM QR Code Viewer
+                </Text>
+              )}
+
             <TextInput 
             ref={phoneInput}
             defaultValue=""
@@ -228,17 +233,16 @@ function LoginScreen() {
                 console.log("Phone Number:" + number);
                 sendVerification();
                 setSentCode(true);
-                setShowSuccess(true);
                 phoneInput.text = '';
             }}>
-            <Text style={styles.label}>Send Code</Text>
+            {isChinese ? (
+              <Text style={styles.label}>发验正码</Text>
+            ) : (
+              <Text style={styles.label}>Send Code</Text>
+            )}
+
           </Pressable>
         </View>
-          {showSuccess && (
-            <View>
-                <Text style={[styles.text]} >Code Sent!</Text>
-            </View>
-          )}
           {showInvalid && (
             <View>
               <Text style={[styles.text]} >Phone number is not valid!</Text>
@@ -252,9 +256,14 @@ function LoginScreen() {
             
           
           <View style={[{justifyContent: 'center'}, {alignItems:'center'}]}>
-            <Text style={[styles.title]}>
-            Enter Verification Code
-            </Text>
+            {isChinese ? (
+              <Text style={styles.title}>加入验证码</Text>
+            ) : (
+              <Text style={[styles.title]}>
+              Enter Verification Code
+              </Text>
+            )}
+
             <TextInput 
             ref={codeInput}
             value={code}
@@ -267,7 +276,12 @@ function LoginScreen() {
         {backgroundColor: pressed ? { opacity: 0.8} : {}},
         styles.button
         ]} onPress={confirmCode}>
+          {isChinese ? (
+            <Text style={styles.label}>证实</Text>
+          ):(
             <Text style={styles.label}>Confirm</Text>
+          )}
+            
           </Pressable>
           </View>
           )}

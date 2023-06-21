@@ -7,13 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import {useLoggedIn } from '../states/global';
 
 
-function Welcome( {navigation} ) {
-  /*
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'Welcome'}]
-    })
-*/
+function Welcome() {
 
     //initialize state variables. useLoggedIn() is the global state variable used for authentication checking.
     const [auth, setAuth] = useLoggedIn();
