@@ -9,4 +9,8 @@ Currently WIP
 
 ### Things to add:
 - [x] Registration Page
-- Congifure and connect to posgres database (I currently do not have access)
+- [x] Photo Upload
+- [x] Camera Access Request
+- [ ] Translate Welcome Page
+- [ ] Add QR Codes
+- [ ] Congifure and connect to posgres database (I currently do not have access)
