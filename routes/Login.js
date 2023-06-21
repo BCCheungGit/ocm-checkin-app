@@ -15,7 +15,7 @@ import { useLang } from '../states/global';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
+import TranslateButton from '../globalComponents/translateButton';
 
 //LoginScreen: the main function for the login screen (pretty self-explanatory)
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -13,6 +13,7 @@ import LoginScreen from './routes/Login';
 import Welcome from './routes/Welcome';
 import RegisterScreen from './routes/Register';
 
+import { useLang } from './states/global';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -22,10 +23,28 @@ const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 
-const TabNavigator = () => (
+
+const TabNavigator = () => {
+  const [isChinese, setIsChinese] = useLang();
+
+  let name1 = "Login"
+  let name2 = "Register"
+
+  if (isChinese) {
+    name1 = "登录";
+    name2 = "注册";
+  } else {
+    name1 = "Login";
+    name2 = "Register";
+  }
+
+
+
+  return (
+  
   <Tab.Navigator initialRouteName='Login' backBehavior='none' activeColor='gray' inactiveColor='white' labelStyle={{fontSize: 12}} shifting={false} barStyle={{backgroundColor: "purple", height: 100, paddingBottom: 10}}>
     <Tab.Screen 
-      name="Login" 
+      name={name1}
       component={LoginScreen}
       options={{
         tabBarIcon: ({color}) => (
@@ -34,7 +53,7 @@ const TabNavigator = () => (
       }}
      />
     <Tab.Screen 
-      name="Register" 
+      name={name2}
       component={RegisterScreen}
       options={{
         tabBarIcon: ({color}) => (
@@ -44,10 +63,12 @@ const TabNavigator = () => (
     /> 
   </Tab.Navigator>
 );
+    }
 
 
 function App() {
   const [auth, setAuth] = useLoggedIn();
+  
 
   const getData = async () => {
     try {
