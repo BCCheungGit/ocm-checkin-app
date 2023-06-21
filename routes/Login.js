@@ -11,7 +11,7 @@ import {useLoggedIn } from '../states/global';
 
 import Axios from 'axios';
 
-
+import { useLang } from '../states/global';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -33,7 +33,16 @@ function LoginScreen() {
     const [sentCode, setSentCode] = useState(false);
     const codeInput = useRef();
 
+    const [isChinese, setIsChinese] = useLang();
 
+    const toggleSwitch = () => {
+      setIsChinese(previousState => !previousState)
+      if (isChinese == false) {
+          changeToChinese();
+      } else {
+          changeToEnglish();
+      }
+  }
     //storeData asynchrinous function to create a key for the phone number entered.
     //Saves this key value pair to local storage for future reference.
     /* 
@@ -94,6 +103,38 @@ function LoginScreen() {
         })
         
     }
+
+    const changeToChinese = () => {
+
+      if (phoneInput.current) {
+          phoneInput.current.setNativeProps({
+              placeholder: "加入手机号码"
+          })
+      }
+
+      if (codeInput.current) {
+        codeInput.current.setNativeProps({
+          placeholder: "加入验证码"
+        })
+      }
+
+  }
+
+  const changeToEnglish = () => {
+
+      if (phoneInput.current) {
+          phoneInput.current.setNativeProps({
+              placeholder: "Enter Phone Number"
+          })
+      }
+
+      if (codeInput.current) {
+        codeInput.current.setNativeProps({
+          placeholder: "Enter Verification Code"
+        })
+      }
+
+  }
 
     //style sheet creation
     const styles = StyleSheet.create({
@@ -157,6 +198,10 @@ function LoginScreen() {
           <FirebaseRecaptchaVerifierModal 
             ref={recaptchaVerifier}
             firebaseConfig={firebaseConfig}
+          />
+          <TranslateButton 
+                value={isChinese}
+                onValueChange={toggleSwitch}
           />
           <Image source={require('../images/ocmlogo.png')} style={styles.image} />
 
