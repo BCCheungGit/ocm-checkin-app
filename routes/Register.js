@@ -12,7 +12,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import TranslateButton from '../globalComponents/translateButton';
 import { useLang } from '../states/global';
 
-function RegisterScreen() {
+import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+
+
+function RegisterScreen({navigation}) {
     const [number, setNumber] = useState("");
     const [fname, setfname] = useState("");
     const [lname, setlname] = useState("");
@@ -39,8 +43,10 @@ function RegisterScreen() {
     const toggleSwitch = () => {
         setIsChinese(previousState => !previousState)
         if (isChinese == false) {
+            navigation.navigate('UnauthorizedRoutes', { screen: "注册"})
             changeToChinese();
         } else {
+            navigation.navigate('UnauthorizedRoutes', { screen: "Register"})
             changeToEnglish();
         }
     }
