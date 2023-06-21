@@ -11,6 +11,8 @@ import {useLoggedIn } from '../states/global';
 
 import Axios from 'axios';
 
+
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -135,8 +137,8 @@ function LoginScreen() {
         },
         image: {
           resizeMode: 'contain',
-          height: 150,
-          width: 160,
+          height: 100,
+          width: 100,
           marginBottom: 30,
 
         },
@@ -159,6 +161,7 @@ function LoginScreen() {
           <Image source={require('../images/ocmlogo.png')} style={styles.image} />
 
           {sentCode == false ? (
+          <View>
             <View style={[{justifyContent: 'center'}, {alignItems:'center'}]}>
             <Text style={[styles.title]}>
             OCM QR Code Viewer
@@ -175,7 +178,7 @@ function LoginScreen() {
             keyboardType='number-pad'
             style={[styles.textinput]}
           />
-          <Pressable style={[styles.button, {marginBottom: 100}]} onPress={
+          <Pressable style={[styles.button]} onPress={
             () => {
                 console.log("Phone Number:" + number);
                 sendVerification();
@@ -185,7 +188,7 @@ function LoginScreen() {
             }}>
             <Text style={styles.label}>Send Code</Text>
           </Pressable>
-        
+        </View>
           {showSuccess && (
             <View>
                 <Text style={[styles.text]} >Code Sent!</Text>
@@ -226,9 +229,12 @@ function LoginScreen() {
 
           
 
+        
 
         </KeyboardAwareScrollView>
+
       </TouchableWithoutFeedback>
+
     );
 
 
