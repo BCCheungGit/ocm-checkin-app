@@ -8,5 +8,5 @@ Currently WIP
 - Thats pretty much it lol
 
 ### Things to add:
-- Registration Page
+- [x] Registration Page
 - Congifure and connect to posgres database (I currently do not have access)
