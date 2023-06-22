@@ -21,6 +21,8 @@ import TranslateButton from '../globalComponents/translateButton';
 
 function LoginScreen() {
 
+
+
     //create state variables
     const [ number, setNumber ] = useState("");
     const [code, setCode] = useState('');
@@ -38,9 +40,10 @@ function LoginScreen() {
     const toggleSwitch = () => {
       setIsChinese(previousState => !previousState)
       if (isChinese == false) {
-          changeToChinese();
+          //changeToChinese();
+
       } else {
-          changeToEnglish();
+          //changeToEnglish();
       }
   }
     //storeData asynchrinous function to create a key for the phone number entered.
@@ -103,13 +106,14 @@ function LoginScreen() {
         })
         
     }
-
+/*
     const changeToChinese = () => {
 
       if (phoneInput.current) {
           phoneInput.current.setNativeProps({
               placeholder: "加入手机号码"
           })
+
       }
 
       if (codeInput.current) {
@@ -135,6 +139,7 @@ function LoginScreen() {
       }
 
   }
+  */
 
     //style sheet creation
     const styles = StyleSheet.create({
@@ -215,19 +220,30 @@ function LoginScreen() {
                 OCM QR Code Viewer
                 </Text>
               )}
-
-            <TextInput 
+            {isChinese ? (
+                <TextInput 
+                ref={phoneInput}
+                defaultValue=""
+                placeholder='加入手机号码'
+                onChangeText={(text) => {
+                    setNumber("+1" + text);
+                }}
+                keyboardType='number-pad'
+                style={[styles.textinput]}
+              />
+            ) : (
+          <TextInput 
             ref={phoneInput}
             defaultValue=""
             placeholder='Enter Phone Number'
             onChangeText={(text) => {
                 setNumber("+1" + text);
-                setShowInvalid(false);
-                setShowSuccess(false);
             }}
             keyboardType='number-pad'
             style={[styles.textinput]}
           />
+            )}
+            
           <Pressable style={[styles.button]} onPress={
             () => {
                 console.log("Phone Number:" + number);
@@ -264,6 +280,16 @@ function LoginScreen() {
               </Text>
             )}
 
+          {isChinese ? (
+            <TextInput 
+            ref={codeInput}
+            value={code}
+            placeholder="加入验证码"
+            onChangeText={setCode}
+            keyboardType='number-pad'
+            style={[styles.textinput]}
+          />
+          ):(
             <TextInput 
             ref={codeInput}
             value={code}
@@ -272,6 +298,8 @@ function LoginScreen() {
             keyboardType='number-pad'
             style={[styles.textinput]}
           />
+          )}
+            
           <Pressable style={({ pressed }) => [
         {backgroundColor: pressed ? { opacity: 0.8} : {}},
         styles.button

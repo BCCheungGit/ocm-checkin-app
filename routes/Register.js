@@ -44,10 +44,10 @@ function RegisterScreen({navigation}) {
         setIsChinese(previousState => !previousState)
         if (isChinese == false) {
             navigation.navigate('UnauthorizedRoutes', { screen: "注册"})
-            changeToChinese();
+            //changeToChinese();
         } else {
             navigation.navigate('UnauthorizedRoutes', { screen: "Register"})
-            changeToEnglish();
+            //changeToEnglish();
         }
     }
 /*
@@ -105,7 +105,7 @@ function RegisterScreen({navigation}) {
         }
     }
 
-    
+/*   
     const changeToChinese = () => {
         if (lnameInput.current) {
             lnameInput.current.setNativeProps({
@@ -162,7 +162,7 @@ function RegisterScreen({navigation}) {
         }
     }
 
-
+*/
      //style sheet creation
      const styles = StyleSheet.create({
         container: {
@@ -263,11 +263,59 @@ function RegisterScreen({navigation}) {
                     Register as a New OCM Member!
                 </Text>
                 )}
-
+            {isChinese ? (
+                <>
                 <TextInput 
                     ref={lnameInput}
                     defaultValue=""
-                    placeholder="Enter Last Name"
+                    placeholder='加入姓氏'
+                    onChangeText={(text) => {
+                        setlname(text);
+                    }}
+                    keyboardType='default'
+                    style={[styles.textinput]}
+                />
+
+                <TextInput 
+                    ref={fnameInput}
+                    defaultValue=""
+                    placeholder='加入名字'
+                    onChangeText={(text) => {
+                        setfname(text);
+                    }}
+                    keyboardType='default'
+                    style={[styles.textinput]}
+                />
+
+                <TextInput 
+                    ref={phoneInput}
+                    defaultValue=""
+                    placeholder='加入手机号码'
+                    onChangeText={(text) => {
+                        setNumber("+1" + text);
+                    }}
+                    keyboardType='number-pad'
+                    style={[styles.textinput]}
+                />
+
+                <TextInput 
+                    ref={emailInput}
+                    defaultValue=""
+                    placeholder='加入电子邮件'
+                    onChangeText={(text) => {
+                        setEmail(text);
+                    }}
+                    keyboardType='email-address'
+                    style={[styles.textinput]}
+                />
+
+                </>
+            ) : (
+               <>
+               <TextInput 
+                    ref={lnameInput}
+                    defaultValue=""
+                    placeholder='Enter Last Name'
                     onChangeText={(text) => {
                         setlname(text);
                     }}
@@ -308,6 +356,10 @@ function RegisterScreen({navigation}) {
                     style={[styles.textinput]}
                 />
 
+               </>
+            )}
+                
+                
                 
 
  
