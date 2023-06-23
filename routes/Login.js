@@ -214,10 +214,10 @@ function LoginScreen() {
           <View>
             <View style={[{justifyContent: 'center'}, {alignItems:'center'}]}>
               {isChinese ? (
-                <Text style={styles.title}>中宣会二维码查看器</Text>
+                <Text style={styles.title}>欢饮来到中宣会</Text>
               ) : (
                 <Text style={[styles.title]}>
-                OCM QR Code Viewer
+                Welcome to OCM!
                 </Text>
               )}
             {isChinese ? (
