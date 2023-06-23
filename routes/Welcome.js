@@ -3,9 +3,10 @@ import { View, Text, Pressable, StyleSheet} from 'react-native';
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
-
+import { useLang } from '../states/global';
 import {useLoggedIn } from '../states/global';
 
+import TranslateButton from '../globalComponents/translateButton';
 
 function Welcome() {
 
@@ -13,6 +14,11 @@ function Welcome() {
     const [auth, setAuth] = useLoggedIn();
     const [currentNumber, setCurrentNumber] = useState("");
 
+    const [isChinese, setIsChinese] = useLang();
+
+    const toggleSwitch = () => {
+      setIsChinese(previousState => !previousState)
+    }
 
     //getData Asynchrinous function: checks local AsyncStorage to see if a number with the key exists.
     //if it does, set current user to the phone number.
@@ -96,11 +102,31 @@ function Welcome() {
     */
     return (
       <View style={[styles.container]}>
-        <Text style={[styles.title]}>You are currently logged in as:</Text>
-        <Text style={[styles.title]}> {currentNumber}</Text>
-        <Text style={[styles.title]}>Insert QR Code Here</Text>
+        <TranslateButton 
+                value={isChinese}
+                onValueChange={toggleSwitch}
+          />
+        {isChinese ? (
+          <>
+            <Text style={[styles.title]}>您当前登录身份为：</Text>
+            <Text style={[styles.title]}> {currentNumber}</Text>
+            <Text style={[styles.title]}>在此插入二维码</Text>
+          </>
+        ) : (
+          <>
+            <Text style={[styles.title]}>You are currently logged in as:</Text>
+            <Text style={[styles.title]}> {currentNumber}</Text>
+            <Text style={[styles.title]}>Insert QR Code Here</Text>
+          </>
+        )}
+
         <Pressable onPress={logOut} style={styles.button}>
-          <Text style={[styles.label]}>Log Out</Text>
+          {isChinese ? (
+            <Text style={[styles.label]}>登出</Text>
+          ) : (
+            <Text style={[styles.label]}>Log Out</Text>
+          )}
+
         </Pressable>
       </View>
     )

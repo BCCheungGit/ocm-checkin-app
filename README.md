@@ -11,6 +11,6 @@ Currently WIP
 - [x] Registration Page
 - [x] Photo Upload
 - [x] Camera Access Request
-- [ ] Translate Welcome Page
+- [x] Translate Welcome Page
 - [ ] Add QR Codes
 - [ ] Congifure and connect to posgres database (I currently do not have access)
