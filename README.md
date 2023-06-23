@@ -1,11 +1,14 @@
 # ocm-checkin-app
 This is an application for OCM <https://www.ocmchurch.org/en> to make their registration process easier. It will allow phone number authentication with firebase, then will display their QR codes based on a postgres database. 
-Currently WIP
+
+In the future this app may become the official app of OCM, and will no longer only provide support for login and registration.
 
 ## Technologies Used: 
-- React Native
+- React JS (Native)
 - Firebase
-- Thats pretty much it lol
+- PostgresSQL
+- I used a library called React global states, in the future I will probably use something like redux toolkit instead.
+
 
 ### Things to add:
 - [x] Registration Page
@@ -14,3 +17,5 @@ Currently WIP
 - [x] Translate Welcome Page
 - [ ] Add QR Codes
 - [ ] Congifure and connect to posgres database (I currently do not have access)
+- [ ] Release the app (app store and google play)
+- [ ] Organize code, add comments, make it more readable (in case future church members want to update the app)
