@@ -65,10 +65,27 @@ function LoginScreen() {
 
     //sendVerification: uses firebase to send a verification code to the phone number provided.
     const sendVerification = () => {
+      Axios.post('http://localhost:5432/login', {
+      phone_number: number,
+    }).then((response) => {
+      if (!response.data.message)
+      {
+        console.log("phone number exists")
+            
+         
+      } else {
+        console.log("Phone number doesnt exist")
+      }
+    })
+
+
+
+      /*
         const phoneProvider = new firebase.auth.PhoneAuthProvider();
         phoneProvider
             .verifyPhoneNumber(number, recaptchaVerifier.current)
             .then(setVerificationId);
+            */
             
     };
 
@@ -83,13 +100,9 @@ function LoginScreen() {
         firebase.auth().signInWithCredential(credential)
         .then(() => {
 
-          /*  
-            Axios.post('www.cloudority.com/login', {
-              phone_number: number,
-            }).then((response) => {
+            
 
-            })
-              */
+          /*
             setSentCode(false);
             storeData(number);
             setAuth(true);
@@ -97,7 +110,7 @@ function LoginScreen() {
             
             setCode('');
             setNumber('');
-            
+            */
         })
         .catch((error) => {
 
