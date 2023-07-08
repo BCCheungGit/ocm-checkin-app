@@ -15,7 +15,9 @@ In the future this app may become the official app of OCM, and will no longer on
 - [x] Photo Upload
 - [x] Camera Access Request
 - [x] Translate Welcome Page
-- [ ] Add QR Codes
-- [ ] Congifure and connect to posgres database (I currently do not have access)
+- [x] Add QR Codes
+- [x] Congifure and connect to posgres database 
+- [ ] Standardize phone numbers in the database
+- [ ] Finish register page
 - [ ] Release the app (app store and google play)
 - [ ] Organize code, add comments, make it more readable (in case future church members want to update the app)
