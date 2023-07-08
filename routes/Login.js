@@ -7,11 +7,10 @@ import firebase from 'firebase/compat/app'
 import { Pressable } from 'react-native';
 
 import { KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useLoggedIn } from '../states/global';
 
 import Axios from 'axios';
 
-import { useLang } from '../states/global';
+import { useLang, useLoggedIn, useName, useId } from '../states/global';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -30,17 +29,21 @@ function LoginScreen() {
     const recaptchaVerifier = useRef(null);
     const [ showInvalid, setShowInvalid ] = useState(false);
     const phoneInput = useRef();
-    const [ showSuccess, setShowSuccess ] = useState(false);
     const [auth, setAuth] = useLoggedIn();
     const [sentCode, setSentCode] = useState(false);
     const codeInput = useRef();
 
     const [isChinese, setIsChinese] = useLang();
 
+
+    const [fname, setfname] = useName();
+    const [peopleId, setPeopleId] = useId();
     const toggleSwitch = () => {
       setIsChinese(previousState => !previousState)
 
-  }
+    }
+
+
     //storeData asynchrinous function to create a key for the phone number entered.
     //Saves this key value pair to local storage for future reference.
     /* 
@@ -48,9 +51,9 @@ function LoginScreen() {
       since it will usually be the same as the phone being used. This is a phone auth app, so there is no password
       involved. Therefore, I will most likely continue to use AsyncStorage since I've used it before.
     */
-    const storeData = async (value) => {
+    const storeData = async (key, value) => {
       try {
-        await AsyncStorage.setItem('phone_number_key', value)
+        await AsyncStorage.setItem(key, value)
         console.log(`${value} stored successfully!`)
       } catch (error) {
         console.log(error)
@@ -66,17 +69,23 @@ function LoginScreen() {
         },
     }).then((response) => {
         if (!response.data.message) {
-          console.log(response.data);
-          setSentCode(true);
+          console.log(response.data[0]);
+          const data = response.data[0];
+          const { fname, lname, people_id, profilePicture } = data;
+
           phoneInput.text = '';
+          storeData('first_name_key', fname);
+          storeData('p_id_key', people_id);
 
           /* STORE FNAME, LNAME, PEOPLEID IN SECURESTORAGE/ASYNCSTORAGE */
-
-
+          
+          
           const phoneProvider = new firebase.auth.PhoneAuthProvider();
           phoneProvider
-              .verifyPhoneNumber(number, recaptchaVerifier.current)
+              .verifyPhoneNumber("+" + number, recaptchaVerifier.current)
               .then(setVerificationId);
+            
+          setSentCode(true);
         } else {
           setSentCode(false);
           phoneInput.text = '';
@@ -89,14 +98,13 @@ function LoginScreen() {
 
 
 
-      /*
-        const phoneProvider = new firebase.auth.PhoneAuthProvider();
-        phoneProvider
-            .verifyPhoneNumber(number, recaptchaVerifier.current)
-            .then(setVerificationId);
-            */
+
             
     };
+
+
+
+
 
 
     //confirmCode: this function handles submit of code. Signs in the user using firebase and the entered number, 
@@ -113,7 +121,7 @@ function LoginScreen() {
 
           
             setSentCode(false);
-            storeData(number);
+            storeData('phone_number_key', "+" + number);
             setAuth(true);
 
             
@@ -128,6 +136,10 @@ function LoginScreen() {
         })
         
     }
+
+
+
+
 
 
     //style sheet creation

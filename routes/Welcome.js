@@ -3,8 +3,9 @@ import { View, Text, Pressable, StyleSheet} from 'react-native';
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
-import { useLang } from '../states/global';
-import {useLoggedIn } from '../states/global';
+import { useLang, useLoggedIn, useId, useName } from '../states/global';
+
+import generateQRCode from './generateQR';
 
 import TranslateButton from '../globalComponents/translateButton';
 
@@ -13,7 +14,10 @@ function Welcome() {
     //initialize state variables. useLoggedIn() is the global state variable used for authentication checking.
     const [auth, setAuth] = useLoggedIn();
     const [currentNumber, setCurrentNumber] = useState("");
-
+    const [currentUser, setCurrentUser] = useState("");
+    const [currentId, setCurrentId] = useState("");
+    //const [fname, setfname] = useName();
+    //const [peopleId, setPeopleId] = useId();
     const [isChinese, setIsChinese] = useLang();
 
     const toggleSwitch = () => {
@@ -25,11 +29,11 @@ function Welcome() {
     /*
       TODO: When database connection is established, instead display name of the person logged in instead of their phone #
      */
-    const getData = async () => {
+    const getData = async (key) => {
       try {
-        const value = await AsyncStorage.getItem('phone_number_key');
+        const value = await AsyncStorage.getItem(key);
         if (value !== null) {
-          setCurrentNumber(value);
+          return value;
         }
       } catch(error) {
         console.log(error)
@@ -38,11 +42,11 @@ function Welcome() {
 
     //removeData Asynchrinous function: remove the data from local storage if the user chooses to 
     //log out.
-    const removeData = async () => {
+    const removeData = async (key) => {
       try {
-        await AsyncStorage.removeItem('phone_number_key');
+        await AsyncStorage.removeItem(key);
         //navigation.navigate(LoginScreen);
-        let value = await AsyncStorage.getItem('phone_number_key')
+        let value = await AsyncStorage.getItem(key)
         console.log(value)
       } catch(error) {
         console.log(error)
@@ -50,11 +54,32 @@ function Welcome() {
       
     }
 
-    getData();
+    getData('phone_number_key').then(value => {
+      setCurrentNumber(value);
+      console.log(value);
+    }).catch(error => {
+      console.log(error);
+    })
+
+    getData('first_name_key').then(value => {
+      setCurrentUser(value);
+      console.log(value);
+    }).catch(error => {
+      console.log(error);
+    })
+
+    getData('p_id_key').then(value => {
+      setCurrentId(value);
+      console.log(value);
+    }).catch(error => {
+      console.log(error);
+    })
 
     //remove data and unauthenticate on log out.
     const logOut = () => {
-      removeData();
+      removeData('phone_number_key');
+      removeData('first_name_key');
+      removeData('p_id_key');
       setAuth(false);
     }
 
@@ -85,6 +110,7 @@ function Welcome() {
 
       },
       button: {
+        marginTop: 20,
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 12,
@@ -109,14 +135,16 @@ function Welcome() {
         {isChinese ? (
           <>
             <Text style={[styles.title]}>您当前登录身份为：</Text>
-            <Text style={[styles.title]}> {currentNumber}</Text>
-            <Text style={[styles.title]}>在此插入二维码</Text>
+            <Text style={[styles.title]}>名字: {currentUser}</Text>
+            <Text style={[styles.title]}>手机号: {currentNumber}</Text>
+            {generateQRCode(currentId)}
           </>
         ) : (
           <>
             <Text style={[styles.title]}>You are currently logged in as:</Text>
-            <Text style={[styles.title]}> {currentNumber}</Text>
-            <Text style={[styles.title]}>Insert QR Code Here</Text>
+            <Text style={[styles.title]}>Name: {currentUser}</Text>
+            <Text style={[styles.title]}>Phone Number: {currentNumber}</Text>
+            {generateQRCode(currentId)}
           </>
         )}
 

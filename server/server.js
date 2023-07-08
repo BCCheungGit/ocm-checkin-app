@@ -47,7 +47,13 @@ app.get('/login', (req,res) => {
         } else {
             if (result.rowCount > 0) {
                 console.log(result.rows);
-                res.send(result.rows);
+                const parsedData = result.rows.map(row => ({
+                    fname: row.fname,
+                    lname: row.lname,
+                    people_id: row.people_id,
+                    profilePicture: row.profile,
+            }))
+                res.send(parsedData);
             } else {
                 res.send({message: "Phone number not in database"})
             }
