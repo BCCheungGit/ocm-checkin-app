@@ -39,12 +39,7 @@ function LoginScreen() {
 
     const toggleSwitch = () => {
       setIsChinese(previousState => !previousState)
-      if (isChinese == false) {
-          //changeToChinese();
 
-      } else {
-          //changeToEnglish();
-      }
   }
     //storeData asynchrinous function to create a key for the phone number entered.
     //Saves this key value pair to local storage for future reference.
@@ -65,18 +60,32 @@ function LoginScreen() {
 
     //sendVerification: uses firebase to send a verification code to the phone number provided.
     const sendVerification = () => {
-      Axios.post('http://localhost:5432/login', {
-      phone_number: number,
+      Axios.get('http://192.168.86.195:3000/login', {
+        params: {
+          phone_number: number,
+        },
     }).then((response) => {
-      if (!response.data.message)
-      {
-        console.log("phone number exists")
-            
-         
-      } else {
-        console.log("Phone number doesnt exist")
-      }
-    })
+        if (!response.data.message) {
+          console.log(response.data);
+          setSentCode(true);
+          phoneInput.text = '';
+
+          /* STORE FNAME, LNAME, PEOPLEID IN SECURESTORAGE/ASYNCSTORAGE */
+
+
+          const phoneProvider = new firebase.auth.PhoneAuthProvider();
+          phoneProvider
+              .verifyPhoneNumber(number, recaptchaVerifier.current)
+              .then(setVerificationId);
+        } else {
+          setSentCode(false);
+          phoneInput.text = '';
+          setShowInvalid(true);
+          console.log("doesnt exist")
+        }
+      }).catch(
+        error => console.log(error.response.data)
+        )
 
 
 
@@ -102,7 +111,7 @@ function LoginScreen() {
 
             
 
-          /*
+          
             setSentCode(false);
             storeData(number);
             setAuth(true);
@@ -110,7 +119,7 @@ function LoginScreen() {
             
             setCode('');
             setNumber('');
-            */
+            
         })
         .catch((error) => {
 
@@ -119,40 +128,7 @@ function LoginScreen() {
         })
         
     }
-/*
-    const changeToChinese = () => {
 
-      if (phoneInput.current) {
-          phoneInput.current.setNativeProps({
-              placeholder: "加入手机号码"
-          })
-
-      }
-
-      if (codeInput.current) {
-        codeInput.current.setNativeProps({
-          placeholder: "加入验证码"
-        })
-      }
-
-  }
-
-  const changeToEnglish = () => {
-
-      if (phoneInput.current) {
-          phoneInput.current.setNativeProps({
-              placeholder: "Enter Phone Number"
-          })
-      }
-
-      if (codeInput.current) {
-        codeInput.current.setNativeProps({
-          placeholder: "Enter Verification Code"
-        })
-      }
-
-  }
-  */
 
     //style sheet creation
     const styles = StyleSheet.create({
@@ -250,7 +226,10 @@ function LoginScreen() {
             defaultValue=""
             placeholder='Enter Phone Number'
             onChangeText={(text) => {
-                setNumber("+1" + text);
+                setNumber(text);
+                setShowInvalid(false);
+                //setNumber("+1" + text);
+                
             }}
             keyboardType='number-pad'
             style={[styles.textinput]}
@@ -261,7 +240,7 @@ function LoginScreen() {
             () => {
                 console.log("Phone Number:" + number);
                 sendVerification();
-                setSentCode(true);
+                //setSentCode(true);
                 phoneInput.text = '';
             }}>
             {isChinese ? (
@@ -271,12 +250,9 @@ function LoginScreen() {
             )}
 
           </Pressable>
+          {showInvalid && <Text style={[styles.text]}>Phone number is not valid!</Text>}
         </View>
-          {showInvalid && (
-            <View>
-              <Text style={[styles.text]} >Phone number is not valid!</Text>
-            </View>
-          )}
+          
 
           </View>
 
