@@ -71,12 +71,12 @@ function LoginScreen() {
         if (!response.data.message) {
           console.log(response.data[0]);
           const data = response.data[0];
-          const { fname, lname, people_id, profilePicture } = data;
+          const { fname, lname, people_id, household_id, profilePicture } = data;
 
           phoneInput.text = '';
           storeData('first_name_key', fname);
           storeData('p_id_key', people_id);
-
+          storeData('h_id_key', household_id);
           /* STORE FNAME, LNAME, PEOPLEID IN SECURESTORAGE/ASYNCSTORAGE */
           
           

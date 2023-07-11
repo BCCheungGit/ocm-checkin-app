@@ -17,7 +17,7 @@ In the future this app may become the official app of OCM, and will no longer on
 - [x] Translate Welcome Page
 - [x] Add QR Codes
 - [x] Congifure and connect to posgres database 
-- [ ] Standardize phone numbers in the database
+- [x] Standardize phone numbers in the database
 - [ ] Finish register page
 - [ ] Release the app (app store and google play)
 - [ ] Organize code, add comments, make it more readable (in case future church members want to update the app)

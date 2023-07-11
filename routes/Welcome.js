@@ -16,6 +16,7 @@ function Welcome() {
     const [currentNumber, setCurrentNumber] = useState("");
     const [currentUser, setCurrentUser] = useState("");
     const [currentId, setCurrentId] = useState("");
+    const [currentHid, setCurrentHid] = useState("");
     //const [fname, setfname] = useName();
     //const [peopleId, setPeopleId] = useId();
     const [isChinese, setIsChinese] = useLang();
@@ -75,11 +76,19 @@ function Welcome() {
       console.log(error);
     })
 
+    getData('h_id_key').then(value => {
+      setCurrentHid(value);
+      console.log(value);
+    }).catch(error => {
+      console.log(error);
+    })
+
     //remove data and unauthenticate on log out.
     const logOut = () => {
       removeData('phone_number_key');
       removeData('first_name_key');
       removeData('p_id_key');
+      removeData('h_id_key');
       setAuth(false);
     }
 
@@ -137,14 +146,14 @@ function Welcome() {
             <Text style={[styles.title]}>您当前登录身份为：</Text>
             <Text style={[styles.title]}>名字: {currentUser}</Text>
             <Text style={[styles.title]}>手机号: {currentNumber}</Text>
-            {generateQRCode(currentId)}
+            {generateQRCode(currentHid, currentId)}
           </>
         ) : (
           <>
             <Text style={[styles.title]}>You are currently logged in as:</Text>
             <Text style={[styles.title]}>Name: {currentUser}</Text>
             <Text style={[styles.title]}>Phone Number: {currentNumber}</Text>
-            {generateQRCode(currentId)}
+            {generateQRCode(currentHid, currentId)}
           </>
         )}
 

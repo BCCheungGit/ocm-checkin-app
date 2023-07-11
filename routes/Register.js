@@ -12,8 +12,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import TranslateButton from '../globalComponents/translateButton';
 import { useLang } from '../states/global';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+
+import Axios from 'axios';
 
 
 function RegisterScreen({navigation}) {
@@ -63,16 +63,32 @@ function RegisterScreen({navigation}) {
         handleLang();
     }, [isChinese])
 */
-    const storeData = async (value) => {
+    const storeData = async (key, value) => {
         try {
-            await AsyncStorage.setItem('phone_number_key', value);
+            await AsyncStorage.setItem(key, value);
             console.log(`${value} stored successfully!`)
         } catch (error) {
             console.log(error);
         }
     }
 
+    
+    const handleRegistration = () => {
+        Axios.post('http://192.168.86.195:3000/register', {
+            fname: fname,
+            lname: lname,
+            phone_number: number,
+            email: email,
+            profile_picture: image,
+        }).then((response) => {
+            if (response.data.message) {
+                console.log("Successfully registered");
+            }
+        }).catch((error) => {
+            console.log("An error occurred:", error);
+        });
 
+    }
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -294,7 +310,7 @@ function RegisterScreen({navigation}) {
                     defaultValue=""
                     placeholder='加入手机号码'
                     onChangeText={(text) => {
-                        setNumber("+1" + text);
+                        setNumber(text);
                     }}
                     keyboardType='number-pad'
                     style={[styles.textinput]}
@@ -341,7 +357,7 @@ function RegisterScreen({navigation}) {
                     defaultValue=""
                     placeholder='Enter Phone Number'
                     onChangeText={(text) => {
-                        setNumber("+1" + text);
+                        setNumber(text);
                     }}
                     keyboardType='number-pad'
                     style={[styles.textinput]}
@@ -398,15 +414,15 @@ function RegisterScreen({navigation}) {
 
 
 
-                {image && <Image source = {{uri: image}} style={{ width: 100, height: 100}} />}
+               {/*  {image && <Image source = {{uri: image}} style={{ width: 100, height: 100}} />} */}
                 <Pressable style={[styles.button]} onPress={
                     () => {
                         console.log("first name: " + fname);
                         console.log("last name: " + lname);
                         console.log("Phone number " + number);
                         console.log("email: " + email);
-                        storeData(number);
-                        setAuth(true);
+                        handleRegistration();
+                        
                         phoneInput.text = '';
                     }}>
                 {isChinese ? (

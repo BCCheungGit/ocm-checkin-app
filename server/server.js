@@ -51,10 +51,11 @@ app.get('/login', (req,res) => {
                     fname: row.fname,
                     lname: row.lname,
                     people_id: row.people_id,
+                    household_id: row.household_id,
                     profilePicture: row.profile,
             }))
                 res.send(parsedData);
-            } else {
+            } else if (result.rowCount < 1) {
                 res.send({message: "Phone number not in database"})
             }
             
@@ -62,6 +63,34 @@ app.get('/login', (req,res) => {
     })
     
 })
+
+
+app.post('/register', (req, res) => {
+    const fname = req.body.fname;
+    const lname = req.body.lname;
+    const phone_number = req.body.phone_number;
+    const email = req.body.email;
+    const profile_picture = req.body.profile_picture;
+  
+    pool.query(
+      'INSERT INTO registrants_staging (fname, lname, phonenumber, email_address, profile_picture) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (email_address) DO NOTHING',
+      [fname, lname, phone_number, email, profile_picture],
+      (err) => {
+        if (err) {
+          if (err.code === '23505') {
+            // Duplicate key violation (email_address is already in use)
+            console.log('Duplicate email address:', email);
+            res.status(409).send({ message: 'Email address already exists.' });
+          } else {
+            console.error('Error inserting into the database:', err);
+            res.status(500).send({ message: 'An error occurred while inserting into the database.' });
+          }
+        } else {
+          res.send({ message: 'Successfully inserted into the database.' });
+        }
+      }
+    );
+  });
 
 
 app.listen(port, '192.168.86.195', () => {
