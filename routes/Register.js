@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import TranslateButton from '../globalComponents/translateButton';
 import { useLang } from '../states/global';
 
-
+import RegisterSuccess from './RegisterSuccess';
 import Axios from 'axios';
 
 
@@ -422,7 +422,7 @@ function RegisterScreen({navigation}) {
                         console.log("Phone number " + number);
                         console.log("email: " + email);
                         handleRegistration();
-                        
+                        navigation.navigate(RegisterSuccess);
                         phoneInput.text = '';
                     }}>
                 {isChinese ? (
