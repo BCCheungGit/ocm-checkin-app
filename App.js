@@ -12,6 +12,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import LoginScreen from './routes/Login';
 import Welcome from './routes/Welcome';
 import RegisterScreen from './routes/Register';
+import RegisterSuccess from './routes/RegisterSuccess';
 
 import { useLang } from './states/global';
 
@@ -93,7 +94,8 @@ function App() {
       <>
 
     <Stack.Screen name="UnauthorizedRoutes" component={TabNavigator} options={{headerShown: false}}/>
-
+    
+    <Stack.Screen name="RegisterSuccess" component={RegisterSuccess} options={{headerShown: false}} />
       </>
     )}
 

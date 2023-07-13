@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, Pressable} from 'react-native';
 
 import TranslateButton from '../globalComponents/translateButton';
 
+import { useLang } from '../states/global';
 
      //style sheet creation
      const styles = StyleSheet.create({
@@ -79,13 +80,22 @@ import TranslateButton from '../globalComponents/translateButton';
 
 
 function RegisterSuccess() {
+    const [isChinese, setIsChinese] = useLang();
+    
+    const toggleSwitch = () => {
+        setIsChinese(previousState => !previousState)
+      }
+
     return (
         <View styles={[styles.container]}>
-            <TranslateButton />
-            <Text>
+            <TranslateButton 
+                value={isChinese}
+                onValueChange={toggleSwitch}
+          />
+            <Text styles={[styles.title]}>
                 Successfully Registered for OCM!
             </Text>
-            <Pressable><Text>Go Back</Text></Pressable>
+            <Pressable styles={[styles.button]}><Text styles={[styles.label]}>Go Back</Text></Pressable>
         </View>
     )
 }
