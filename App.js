@@ -92,9 +92,7 @@ function App() {
     (<Stack.Screen name="Welcome" component={Welcome} options={{headerShown: false}}/>
     ) : (
       <>
-
     <Stack.Screen name="UnauthorizedRoutes" component={TabNavigator} options={{headerShown: false}}/>
-    
     <Stack.Screen name="RegisterSuccess" component={RegisterSuccess} options={{headerShown: false}} />
       </>
     )}

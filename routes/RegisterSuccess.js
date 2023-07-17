@@ -4,6 +4,7 @@ import {View, Text, StyleSheet, Pressable} from 'react-native';
 import TranslateButton from '../globalComponents/translateButton';
 
 import { useLang } from '../states/global';
+import LoginScreen from './Login';
 
      //style sheet creation
      const styles = StyleSheet.create({
@@ -79,9 +80,9 @@ import { useLang } from '../states/global';
     })
 
 
-function RegisterSuccess() {
+function RegisterSuccess({navigation}) {
     const [isChinese, setIsChinese] = useLang();
-    
+
     const toggleSwitch = () => {
         setIsChinese(previousState => !previousState)
       }
@@ -95,7 +96,11 @@ function RegisterSuccess() {
             <Text styles={[styles.title]}>
                 Successfully Registered for OCM!
             </Text>
-            <Pressable styles={[styles.button]}><Text styles={[styles.label]}>Go Back</Text></Pressable>
+            <Pressable styles={[styles.button]} 
+                onPress = {() => {
+                    navigation.navigate(LoginScreen)
+                }}
+            ><Text styles={[styles.label]}>Go Back</Text></Pressable>
         </View>
     )
 }
