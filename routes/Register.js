@@ -81,8 +81,12 @@ function RegisterScreen({navigation}) {
             email: email,
             profile_picture: image,
         }).then((response) => {
-            if (response.data.message) {
-                console.log("Successfully registered");
+            if (response.data.message == "Success") {
+                console.log(response.data.message);
+                navigation.navigate("RegisterSuccess");
+            } else if (response.data.message == "AlreadyExists") {
+                console.log("Duplicate Email");
+                navigation.navigate("RegisterFail")
             }
         }).catch((error) => {
             console.log("An error occurred:", error);
@@ -422,7 +426,7 @@ function RegisterScreen({navigation}) {
                         console.log("Phone number " + number);
                         console.log("email: " + email);
                         handleRegistration();
-                        navigation.navigate(RegisterSuccess);
+
                         phoneInput.text = '';
                     }}>
                 {isChinese ? (

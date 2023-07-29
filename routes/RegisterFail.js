@@ -15,6 +15,7 @@ import LoginScreen from './Login';
             justifyContent: 'center', 
             marginTop: 10,
         },
+
         button: {
             alignItems: 'center',
             justifyContent: 'center',
@@ -39,7 +40,7 @@ import LoginScreen from './Login';
         title: {
             fontWeight: 'bold',
             fontSize: 25,
-            marginBottom: 20,
+            marginBottom: 10,
         },
         switch: {
             justifyContent: 'center',
@@ -74,7 +75,7 @@ function RegisterSuccess({navigation}) {
             onValueChange={toggleSwitch}
       />
         <Text style={[styles.title]}>
-            注册成功
+             电子邮件已经存在
         </Text>
         <Pressable style={[styles.button]} 
             onPress = {() => {
@@ -89,7 +90,7 @@ function RegisterSuccess({navigation}) {
                 onValueChange={toggleSwitch}
           />
             <Text style={[styles.title]}>
-                Successfully Registered!
+                Email Already Exists
             </Text>
             <Pressable style={[styles.button]} 
                 onPress = {() => {

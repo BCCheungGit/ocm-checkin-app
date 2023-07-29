@@ -13,7 +13,7 @@ import LoginScreen from './routes/Login';
 import Welcome from './routes/Welcome';
 import RegisterScreen from './routes/Register';
 import RegisterSuccess from './routes/RegisterSuccess';
-
+import RegisterFail from './routes/RegisterFail'
 import { useLang } from './states/global';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -94,6 +94,7 @@ function App() {
       <>
     <Stack.Screen name="UnauthorizedRoutes" component={TabNavigator} options={{headerShown: false}}/>
     <Stack.Screen name="RegisterSuccess" component={RegisterSuccess} options={{headerShown: false}} />
+    <Stack.Screen name="RegisterFail" component={RegisterFail} options={{headerShown: false}} />
       </>
     )}
 

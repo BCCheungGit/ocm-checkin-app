@@ -71,25 +71,36 @@ app.post('/register', (req, res) => {
     const phone_number = req.body.phone_number;
     const email = req.body.email;
     const profile_picture = req.body.profile_picture;
-  
-    pool.query(
-      'INSERT INTO registrants_staging (fname, lname, phonenumber, email_address, profile_picture) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (email_address) DO NOTHING',
-      [fname, lname, phone_number, email, profile_picture],
-      (err) => {
-        if (err) {
-          if (err.code === '23505') {
-            // Duplicate key violation (email_address is already in use)
-            console.log('Duplicate email address:', email);
-            res.status(409).send({ message: 'Email address already exists.' });
-          } else {
-            console.error('Error inserting into the database:', err);
-            res.status(500).send({ message: 'An error occurred while inserting into the database.' });
+    pool.query("SELECT * FROM registrants_staging WHERE email_address = $1",
+    [email],
+    (err, result) => {
+      if (err) {
+          console.log(err);
+          res.send({message: "Error"});
+      } else {
+          if (result.rowCount > 0) {
+            res.send({message: "AlreadyExists"})   
+          } else if (result.rowCount < 1) {
+            pool.query(
+              'INSERT INTO registrants_staging (fname, lname, phonenumber, email_address, profile_picture) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (email_address) DO UPDATE SET email_address = registrants_staging.email_address',
+              [fname, lname, phone_number, email, profile_picture],
+              (err) => {
+                if (err) {
+                  console.log("error")
+                } else {
+                  res.send({message: "Success"})
+                }
+                
+              })
           }
-        } else {
-          res.send({ message: 'Successfully inserted into the database.' });
+        
         }
+          
+          
       }
-    );
+    )
+    
+       
   });
 
 
