@@ -50,6 +50,8 @@ app.get('/login', (req,res) => {
                 const parsedData = result.rows.map(row => ({
                     fname: row.fname,
                     lname: row.lname,
+                    nickname: row.nickname,
+                    membership: row.membership,
                     people_id: row.people_id,
                     household_id: row.household_id,
                     profilePicture: row.profile,

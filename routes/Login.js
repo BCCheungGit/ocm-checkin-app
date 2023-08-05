@@ -89,12 +89,15 @@ function LoginScreen() {
         if (!response.data.message) {
           console.log(response.data[0]);
           const data = response.data[0];
-          const { fname, lname, people_id, household_id, profilePicture } = data;
+          const { fname, lname, nickname, membership, people_id, household_id, profilePicture } = data;
 
           phoneInput.text = '';
           storeData('first_name_key', fname);
+          storeData('last_name_key', lname);
           storeData('p_id_key', people_id);
           storeData('h_id_key', household_id);
+          storeData('nickname_key', nickname);
+          storeData('membership_key', membership)
           /* STORE FNAME, LNAME, PEOPLEID IN SECURESTORAGE/ASYNCSTORAGE */
           
           
