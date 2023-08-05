@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import { View, Text, Pressable, StyleSheet} from 'react-native';
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -30,16 +30,7 @@ function Welcome() {
     /*
       TODO: When database connection is established, instead display name of the person logged in instead of their phone #
      */
-    const getData = async (key) => {
-      try {
-        const value = await AsyncStorage.getItem(key);
-        if (value !== null) {
-          return value;
-        }
-      } catch(error) {
-        console.log(error)
-      }
-    }
+
 
     //removeData Asynchrinous function: remove the data from local storage if the user chooses to 
     //log out.
@@ -55,33 +46,28 @@ function Welcome() {
       
     }
 
-    getData('phone_number_key').then(value => {
-      setCurrentNumber(value);
-      console.log(value);
-    }).catch(error => {
-      console.log(error);
-    })
+    useEffect(() => {
+      const checkAuthentication = async () => {
+        try {
+          const numberValue = await AsyncStorage.getItem('phone_number_key');
+          const fnameValue = await AsyncStorage.getItem('first_name_key')
+          const pidValue = await AsyncStorage.getItem('p_id_key');
+          const hidValue = await AsyncStorage.getItem('h_id_key')
+          setCurrentUser(fnameValue);
+          setCurrentId(pidValue);
+          setCurrentHid(hidValue);
+          setCurrentNumber(numberValue);
 
-    getData('first_name_key').then(value => {
-      setCurrentUser(value);
-      console.log(value);
-    }).catch(error => {
-      console.log(error);
-    })
+        } catch (error) {
+          console.log(error);
+        }
+      };
+  
+      checkAuthentication();
+    }, []);
 
-    getData('p_id_key').then(value => {
-      setCurrentId(value);
-      console.log(value);
-    }).catch(error => {
-      console.log(error);
-    })
 
-    getData('h_id_key').then(value => {
-      setCurrentHid(value);
-      console.log(value);
-    }).catch(error => {
-      console.log(error);
-    })
+  
 
     //remove data and unauthenticate on log out.
     const logOut = () => {

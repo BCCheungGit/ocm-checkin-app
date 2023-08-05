@@ -14,33 +14,35 @@ function TranslateButton({value, onValueChange }) {
 */
     
     const styles = StyleSheet.create({
-        switch: {
-            justifyContent: 'center',
-            alignContent: 'center',
+        container: {
             position: 'absolute',
-            top: 40,
+            top: 30,
+            right: 30,
+
+        },
+        switch: {
             alignSelf: 'flex-end',
             flexDirection: 'row',
         },
         language: {
             fontSize: 15,
-            marginTop: 5,
-            marginHorizontal: 5
-            
+             
         }
     })
 
     return (
-        <View style={styles.switch}>
-            <Text style={styles.language}>Eng</Text>
-            <Switch 
-                trackColor={{false: 'purple', true: 'purple'}}
-                ios_backgroundColor='purple'
-                onValueChange={onValueChange}
-                value={value}
-            >
-            </Switch>
-            <Text style={styles.language}>中文</Text>
+        <View style={styles.container}> 
+            <View style={styles.switch}>
+                <Text style={styles.language}>Eng</Text>
+                <Switch 
+                    trackColor={{false: 'purple', true: 'purple'}}
+                    ios_backgroundColor='purple'
+                    onValueChange={onValueChange}
+                    value={value}
+                >
+                </Switch>
+                <Text style={styles.language}>中文</Text>
+            </View>
         </View>
     );
 

@@ -1,4 +1,4 @@
-import React, {useState, useRef,} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import { View, Text, TextInput, Keyboard, StyleSheet, Image} from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha'
@@ -6,8 +6,9 @@ import { firebaseConfig } from '../config/config'
 import firebase from 'firebase/compat/app'
 import { Pressable } from 'react-native';
 
-import { KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
+
+import { login, logout } from '../redux/authSlice';
 import Axios from 'axios';
 
 import { useLang, useLoggedIn, useName, useId } from '../states/global';
@@ -24,11 +25,22 @@ function LoginScreen() {
 
     //create state variables
     const [ number, setNumber ] = useState("");
+    let fbNumber = "";
+
     const [code, setCode] = useState('');
     const [verificationId, setVerificationId] = useState(null);
+    
+    const [verificationCompleted, setVerificationCompleted] = useState(false)
+    
+
+
     const recaptchaVerifier = useRef(null);
     const [ showInvalid, setShowInvalid ] = useState(false);
     const phoneInput = useRef();
+
+    
+   
+
     const [auth, setAuth] = useLoggedIn();
     const [sentCode, setSentCode] = useState(false);
     const codeInput = useRef();
@@ -63,6 +75,12 @@ function LoginScreen() {
 
     //sendVerification: uses firebase to send a verification code to the phone number provided.
     const sendVerification = () => {
+      if (number.substring(0, 1) == "1") {
+        fbNumber = "+" + number;
+      } else {
+        fbNumber = "+1" + number;
+      }
+
       Axios.get('http://192.168.86.195:3000/login', {
         params: {
           phone_number: number,
@@ -82,15 +100,25 @@ function LoginScreen() {
           
           const phoneProvider = new firebase.auth.PhoneAuthProvider();
           phoneProvider
-              .verifyPhoneNumber("+" + number, recaptchaVerifier.current)
-              .then(setVerificationId);
-            
-          setSentCode(true);
+              .verifyPhoneNumber(fbNumber, recaptchaVerifier.current)
+              .then((verificationId) => {
+                setVerificationId(verificationId);
+                setVerificationCompleted(true);
+                setSentCode(true);
+              })
+              .catch((error) => {
+                console.log(error);
+                setVerificationCompleted(false);
+              })
+          setCode('');
+          
         } else {
           setSentCode(false);
           phoneInput.text = '';
           setShowInvalid(true);
           console.log("doesnt exist")
+          setVerificationId(null);
+          setVerificationCompleted(false);
         }
       }).catch(
         error => console.log(error.response.data)
@@ -121,9 +149,11 @@ function LoginScreen() {
 
           
             setSentCode(false);
-            storeData('phone_number_key', "+" + number);
+            storeData('phone_number_key', number);
             setAuth(true);
+            //dispatch(login());
 
+          
             
             setCode('');
             setNumber('');
@@ -137,8 +167,12 @@ function LoginScreen() {
         
     }
 
-
-
+    /*
+    useEffect(() => {
+      console.log("Redux store state:", state); // Log the entire Redux store state
+      console.log("useEffect am logged in: " + isAuthenticated); 
+    }, [isAuthenticated]);
+*/
 
 
 
@@ -147,26 +181,33 @@ function LoginScreen() {
         container: {
             flex: 1,
             padding: 20,
+            position: 'relative',
             alignItems: 'center', 
-            justifyContent: 'center' 
+            justifyContent: 'center',
+            height: '100%',
+            width: '100%',
+            backgroundColor: 'white',
         },
         textinput: {
+
             height: 55,
             margin: 12,
             borderWidth: 1,
             padding: 10,
-            width: 300 
+            width: "90%" 
         },
         button: {
+
             alignItems: 'center',
             justifyContent: 'center',
             paddingVertical: 12,
-            paddingHorizontal: 32,
             borderRadius: 4,
             elevation: 3,
+            width: '40%',
             backgroundColor: 'purple',
           },
         label: {
+          
             fontSize: 16,
             lineHeight: 21,
             fontWeight: 'bold',
@@ -174,6 +215,7 @@ function LoginScreen() {
             color: 'white',
           },
         text: {
+
             padding: 10,
             fontSize: 15,
         },
@@ -195,25 +237,18 @@ function LoginScreen() {
     //The main return of the LoginScreen function. Returns a basic login page that allows users to enter their information
     //and sign in.
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} acessible={false}>
-        <KeyboardAwareScrollView style={{backgroundColor: "white"}}
-          resetScrollToCoords={{x: 0, y: 0}}
-          contentContainerStyle={styles.container}
-          scrollEnabled={true}
-        >
-          <FirebaseRecaptchaVerifierModal 
-            ref={recaptchaVerifier}
-            firebaseConfig={firebaseConfig}
-          />
+
+      <View style={[styles.container]} onScroll={() => Keyboard.dismiss()} onPress={Keyboard.dismiss} acessible={false}>
+
+      
           <TranslateButton 
                 value={isChinese}
                 onValueChange={toggleSwitch}
           />
           <Image source={require('../images/ocmlogo.png')} style={styles.image} />
 
-          {sentCode == false ? (
-          <View>
-            <View style={[{justifyContent: 'center'}, {alignItems:'center'}]}>
+          {verificationCompleted == false ? (
+            <>
               {isChinese ? (
                 <Text style={styles.title}>欢饮来到中宣会</Text>
               ) : (
@@ -227,7 +262,7 @@ function LoginScreen() {
                 defaultValue=""
                 placeholder='加入手机号码'
                 onChangeText={(text) => {
-                    setNumber("+1" + text);
+                    setNumber(text);
                 }}
                 keyboardType='number-pad'
                 style={[styles.textinput]}
@@ -240,7 +275,7 @@ function LoginScreen() {
             onChangeText={(text) => {
                 setNumber(text);
                 setShowInvalid(false);
-                //setNumber("+1" + text);
+               
                 
             }}
             keyboardType='number-pad'
@@ -262,17 +297,16 @@ function LoginScreen() {
             )}
 
           </Pressable>
+          <FirebaseRecaptchaVerifierModal 
+            ref={recaptchaVerifier}
+            firebaseConfig={firebaseConfig}
+          />
           {showInvalid && <Text style={[styles.text]}>Phone number is not valid!</Text>}
-        </View>
-          
-
-          </View>
-
-
+          </>
           ) : (
             
           
-          <View style={[{justifyContent: 'center'}, {alignItems:'center'}]}>
+          <>
             {isChinese ? (
               <Text style={styles.title}>加入验证码</Text>
             ) : (
@@ -301,10 +335,8 @@ function LoginScreen() {
           />
           )}
             
-          <Pressable style={({ pressed }) => [
-        {backgroundColor: pressed ? { opacity: 0.8} : {}},
-        styles.button
-        ]} onPress={confirmCode}>
+          <Pressable style={[styles.button]}
+         onPress={confirmCode}>
           {isChinese ? (
             <Text style={styles.label}>证实</Text>
           ):(
@@ -312,16 +344,17 @@ function LoginScreen() {
           )}
             
           </Pressable>
-          </View>
+          
+          </>
           )}
 
           
 
         
 
-        </KeyboardAwareScrollView>
+        </View>
 
-      </TouchableWithoutFeedback>
+
 
     );
 
