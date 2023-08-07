@@ -3,6 +3,8 @@ This is an application for OCM <https://www.ocmchurch.org/en> to make their regi
 
 In the future this app may become the official app of OCM, and will no longer only provide support for login and registration.
 
+Initially was meant to be an Android/ios app, but made into a web application. An android/ios version will be released if the app receives positive feedback from church members.
+
 ## Technologies Used: 
 - React JS (Native)
 - Firebase
@@ -10,14 +12,4 @@ In the future this app may become the official app of OCM, and will no longer on
 - I used a library called React global states, in the future I will probably use something like redux toolkit instead.
 
 
-### Things to add:
-- [x] Registration Page
-- [x] Photo Upload
-- [x] Camera Access Request
-- [x] Translate Welcome Page
-- [x] Add QR Codes
-- [x] Congifure and connect to posgres database 
-- [x] Standardize phone numbers in the database
-- [ ] Finish register page
-- [ ] Release the app (app store and google play)
-- [ ] Organize code, add comments, make it more readable (in case future church members want to update the app)
+
