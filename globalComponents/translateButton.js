@@ -1,18 +1,10 @@
-import React, {useState, useRef,} from 'react';
-import {Switch, Pressable, TouchableWithoutFeedback, View, Text, TextInput, Keyboard, StyleSheet, Image} from 'react-native';
-import { useLang } from '../states/global';
+import React from 'react';
+import {Switch, View, Text,StyleSheet} from 'react-native';
 
 
-function TranslateButton({value, onValueChange }) {
- /*   
-    const [isChinese, setIsChinese] = useLang();
-
-    const toggleSwitch = () => {
-        setIsChinese(previousState => !previousState)
-        console.log(isChinese);
-    }
+/* Translate Button: creates a global translate switch button that uses the following styles.
 */
-    
+function TranslateButton({value, onValueChange }) {
     const styles = StyleSheet.create({
         container: {
             position: 'absolute',

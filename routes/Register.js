@@ -15,7 +15,9 @@ import { useLang } from '../states/global';
 import RegisterSuccess from './RegisterSuccess';
 import Axios from 'axios';
 
-
+/*
+TODO: REGISTER ROUTE COMING SOON
+*/
 function RegisterScreen({navigation}) {
     const [number, setNumber] = useState("");
     const [fname, setfname] = useState("");

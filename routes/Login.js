@@ -6,12 +6,9 @@ import { firebaseConfig } from '../config/config'
 import firebase from 'firebase/compat/app'
 import { Pressable } from 'react-native';
 
-
-
-import { login, logout } from '../redux/authSlice';
 import Axios from 'axios';
 
-import { useLang, useLoggedIn, useName, useId } from '../states/global';
+import { useLang, useLoggedIn} from '../states/global';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -26,30 +23,16 @@ function LoginScreen() {
     //create state variables
     const [ number, setNumber ] = useState("");
     let fbNumber = "";
-
     const [code, setCode] = useState('');
     const [verificationId, setVerificationId] = useState(null);
-    
     const [verificationCompleted, setVerificationCompleted] = useState(false)
-    
-
-
     const recaptchaVerifier = useRef(null);
     const [ showInvalid, setShowInvalid ] = useState(false);
     const phoneInput = useRef();
-
-    
-   
-
     const [auth, setAuth] = useLoggedIn();
     const [sentCode, setSentCode] = useState(false);
     const codeInput = useRef();
-
     const [isChinese, setIsChinese] = useLang();
-
-
-    const [fname, setfname] = useName();
-    const [peopleId, setPeopleId] = useId();
     const toggleSwitch = () => {
       setIsChinese(previousState => !previousState)
 
@@ -81,6 +64,13 @@ function LoginScreen() {
         fbNumber = "+1" + number;
       }
 
+
+
+
+
+
+
+      //CHANGE THE URL HERE TO CLOUDORITY
       Axios.get('http://192.168.86.195:3000/login', {
         params: {
           phone_number: number,
@@ -98,9 +88,11 @@ function LoginScreen() {
           storeData('h_id_key', household_id);
           storeData('nickname_key', nickname);
           storeData('membership_key', membership)
-          /* STORE FNAME, LNAME, PEOPLEID IN SECURESTORAGE/ASYNCSTORAGE */
+          /* STORE FNAME, LNAME, PEOPLEID, nickname, membership, household id IN SECURESTORAGE/ASYNCSTORAGE */
           
           
+          //confirm verification of the code. Ask for a recaptcha that will give a verification id, which will
+          //then be used to send a code to the phone number. Without completing recaptcha, there is no code.
           const phoneProvider = new firebase.auth.PhoneAuthProvider();
           phoneProvider
               .verifyPhoneNumber(fbNumber, recaptchaVerifier.current)
@@ -116,14 +108,15 @@ function LoginScreen() {
           setCode('');
           
         } else {
+          //if there is no response to the api call, show that the phone number does not exist on the database.
           setSentCode(false);
           phoneInput.text = '';
           setShowInvalid(true);
-          console.log("doesnt exist")
           setVerificationId(null);
           setVerificationCompleted(false);
         }
       }).catch(
+        //catch errors
         error => console.log(error.response.data)
         )
 
@@ -147,14 +140,13 @@ function LoginScreen() {
         );
         firebase.auth().signInWithCredential(credential)
         .then(() => {
+          //login using the code that was sent to the phone number provided. Store phone number in localstorage.
+    
 
-            
-
-          
+  
             setSentCode(false);
             storeData('phone_number_key', number);
             setAuth(true);
-            //dispatch(login());
 
           
             
@@ -170,12 +162,6 @@ function LoginScreen() {
         
     }
 
-    /*
-    useEffect(() => {
-      console.log("Redux store state:", state); // Log the entire Redux store state
-      console.log("useEffect am logged in: " + isAuthenticated); 
-    }, [isAuthenticated]);
-*/
 
 
 
@@ -253,7 +239,7 @@ function LoginScreen() {
           {verificationCompleted == false ? (
             <>
               {isChinese ? (
-                <Text style={styles.title}>欢饮来到中宣会</Text>
+                <Text style={styles.title}>歡飲來到中宣會</Text>
               ) : (
                 <Text style={[styles.title]}>
                 Welcome to OCM!
@@ -263,7 +249,7 @@ function LoginScreen() {
                 <TextInput 
                 ref={phoneInput}
                 defaultValue=""
-                placeholder='加入手机号码'
+                placeholder='加入手機號碼'
                 onChangeText={(text) => {
                     setNumber(text);
                 }}
@@ -294,7 +280,7 @@ function LoginScreen() {
                 phoneInput.text = '';
             }}>
             {isChinese ? (
-              <Text style={styles.label}>发验正码</Text>
+              <Text style={styles.label}>發驗正碼</Text>
             ) : (
               <Text style={styles.label}>Send Code</Text>
             )}
@@ -311,7 +297,7 @@ function LoginScreen() {
           
           <>
             {isChinese ? (
-              <Text style={styles.title}>加入验证码</Text>
+              <Text style={styles.title}>加入驗證碼</Text>
             ) : (
               <Text style={[styles.title]}>
               Enter Verification Code
@@ -322,7 +308,7 @@ function LoginScreen() {
             <TextInput 
             ref={codeInput}
             value={code}
-            placeholder="加入验证码"
+            placeholder="加入驗證碼"
             onChangeText={setCode}
             keyboardType='number-pad'
             style={[styles.textinput]}

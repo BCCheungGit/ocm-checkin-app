@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 
-
+//create connection pool
 const pool = new Pool ({
     user: 'postgres',
     host: 'arrival.cloudority.com',
@@ -18,23 +18,11 @@ const pool = new Pool ({
     port: '5432'
 });
 
-/*
-app.get('/login', (req, res) => {
-    pool.query("SELECT * FROM v_people_details where phonenumber = '15166531486'",
-    (err, result) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(result.rows);
-            res.send(result.rows);
-        }
-    }
-    )
-})
 
+
+/* /login route: queries the database for all users with that phone number, then creates a hashmap to map the data to 
+   parsedData, which is then sent back to the client.
 */
-
-
 app.get('/login', (req,res) => {
     const phone_number = req.query.phone_number;
 
@@ -58,6 +46,7 @@ app.get('/login', (req,res) => {
             }))
                 res.send(parsedData);
             } else if (result.rowCount < 1) {
+              //if there are no results, return phone number not in database.
                 res.send({message: "Phone number not in database"})
             }
             
@@ -67,6 +56,10 @@ app.get('/login', (req,res) => {
 })
 
 
+/* register route: gets first name, last name, phone number, email, and profile picture from the client, then posts it to the 
+database.
+TODO: Registration route currently not available.
+ */
 app.post('/register', (req, res) => {
     const fname = req.body.fname;
     const lname = req.body.lname;

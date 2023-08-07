@@ -6,6 +6,10 @@ import TranslateButton from '../globalComponents/translateButton';
 import { useLang } from '../states/global';
 import LoginScreen from './Login';
 
+/*
+TODO: REGISTER ROUTE COMING SOON
+*/
+
      //style sheet creation
      const styles = StyleSheet.create({
         container: {

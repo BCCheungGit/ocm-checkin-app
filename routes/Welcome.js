@@ -7,7 +7,7 @@ import { useLang, useLoggedIn, useId, useName } from '../states/global';
 
 import generateQRCode from './generateQR';
 
-import TranslateButton from '../globalComponents/translateButton';
+
 
 import Svg, { Path } from 'react-native-svg';
 
@@ -23,14 +23,12 @@ function Welcome() {
     const [currentHid, setCurrentHid] = useState("");
     const [currentNickname, setCurrentNickname] = useState("");
     const [currentMembership, setCurrentMembership] = useState("");
-    const emptyNickname = "张弘弦";
+    const emptyNickname = "";
     //const [fname, setfname] = useName();
     //const [peopleId, setPeopleId] = useId();
     const [isChinese, setIsChinese] = useLang();
 
-    const toggleSwitch = () => {
-      setIsChinese(previousState => !previousState)
-    }
+
 
     //getData Asynchrinous function: checks local AsyncStorage to see if a number with the key exists.
     //if it does, set current user to the phone number.
@@ -204,7 +202,7 @@ function Welcome() {
 
 
         <Image source={require('../images/ocmlogo.png')} style={styles.image} />
-        <Text style={[styles.ocm]}> 中 宣 会 OCM</Text>
+        <Text style={[styles.ocm]}> 中 宣 會 OCM</Text>
         <Text style={[styles.title]}>{currentUser}</Text>
         <Text style={[styles.membership]}>{currentMembership}</Text>
         <Text style={[styles.nickname]}>{currentNickname == null ? currentNickname : emptyNickname}</Text>
