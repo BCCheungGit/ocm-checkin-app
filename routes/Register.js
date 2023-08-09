@@ -95,6 +95,13 @@ function RegisterScreen({navigation}) {
         });
 
     }
+
+
+
+    /*
+    TODO: change pickImage and pickCamera to react native for web compatible components, check chatgpt for alternatives
+    */
+
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
